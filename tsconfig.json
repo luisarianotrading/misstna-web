@@ -40,7 +40,6 @@
     "incremental": true,
     "types": [
       "node",
-      "jest",
       "@types/react"
     ],
     "isolatedModules": true,
