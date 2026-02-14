@@ -68,10 +68,10 @@ export default function Home() {
           </p>
           <div className="flex gap-4">
             <Link
-              href="/dashboard"
+              href={session ? '/dashboard' : '/login'}
               className="px-6 py-3 bg-amber-400 text-slate-900 font-bold rounded-lg hover:bg-amber-300 transition"
             >
-              Acceder al Dashboard
+              {session ? 'Ir al Dashboard' : 'Acceder al Dashboard'}
             </Link>
             <button className="px-6 py-3 border-2 border-cyan-400 text-cyan-400 font-bold rounded-lg hover:bg-cyan-400/10 transition">
               Solicitar Consultoría
@@ -135,11 +135,11 @@ export default function Home() {
           ].map((pillar, idx) => (
             <div
               key={idx}
-              className="group bg-slate-800/30 border border-slate-700 rounded-lg p-6 hover:border-amber-400 hover:bg-slate-800/60 transition cursor-pointer"
+              className="bg-slate-800/50 border border-slate-700 rounded-lg p-6 hover:border-amber-400 hover:bg-slate-800/80 transition"
             >
               <div className="text-4xl mb-3">{pillar.icon}</div>
-              <h3 className="text-lg font-bold text-white mb-3 group-hover:text-amber-400 transition">{pillar.title}</h3>
-              <p className="text-sm text-slate-400 group-hover:text-slate-300 transition hidden group-hover:block">
+              <h3 className="text-lg font-bold text-white mb-3">{pillar.title}</h3>
+              <p className="text-sm text-slate-300">
                 {pillar.description}
               </p>
             </div>
