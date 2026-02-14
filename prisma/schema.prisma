@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PUBLIC
+  PREMIUM
+  ADMIN
+}
+
+enum BotStatus {
+  ACTIVE
+  INACTIVE
+  ERROR
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  name      String
+  role      Role      @default(PUBLIC)
+  status    String    @default("active")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  sessions  Session[]
+
+  @@index([email])
+}
+
+model Session {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model BotMetrics {
+  id              String    @id @default(cuid())
+  botName         String    // "ETFs", "SPY", "Stocks"
+  status          BotStatus @default(ACTIVE)
+  totalTrades     Int       @default(0)
+  winRate         Float     @default(0)
+  pnlTotal        Float     @default(0)
+  avgR            Float     @default(0)
+  lossesAvoided   Int       @default(0)
+  activeRoutes    Int       @default(0)
+  lastUpdate      DateTime  @default(now())
+  rawData         Json      // Almacenar JSON completo de cada bot
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([botName])
+  @@index([updatedAt])
+}
+
+model Trade {
+  id              String    @id @default(cuid())
+  botName         String    // "ETFs", "SPY", "Stocks"
+  symbol          String
+  side            String    // "long", "short"
+  entryPrice      Float
+  exitPrice       Float?
+  stopPrice       Float
+  target1         Float?
+  target2         Float?
+  target3         Float?
+  pnl             Float     @default(0)
+  rMultiple       Float     @default(0)
+  status          String    @default("open")  // "open", "closed", "cancelled"
+  openTimeNY      String
+  closeTimeNY     String?
+  durationMin     Float     @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([botName])
+  @@index([symbol])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ActiveRoute {
+  id              String    @id @default(cuid())
+  botName         String    // "ETFs", "SPY", "Stocks"
+  symbol          String
+  signalType      String    // "LONG", "SHORT", "PULLBACK_LONG", etc
+  entryPrice      Float
+  currentPrice    Float
+  pnl             Float
+  score           Float     @default(0)
+  minutesOpen     Float     @default(0)
+  stopPrice       Float
+  target1         Float?
+  target2         Float?
+  target3         Float?
+  openTime        DateTime
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([botName])
+  @@index([symbol])
+  @@index([updatedAt])
+}
