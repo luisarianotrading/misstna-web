@@ -1,7 +1,7 @@
 {
   "name": "misstna-web",
   "version": "1.0.0",
-  "description": "MissTNA Trading Bots Dashboard Platform",
+  "description": "Miss TNA Software & Strategy LLC - Plataforma Profesional de Trading & Consultoría",
   "private": true,
   "scripts": {
     "dev": "next dev",
